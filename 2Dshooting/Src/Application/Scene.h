@@ -29,6 +29,8 @@ private:
 	Scene() {}
 	C_Game* m_game
 
+		int a= 0;;
+
 public:
 	static Scene& GetInstance()
 	{

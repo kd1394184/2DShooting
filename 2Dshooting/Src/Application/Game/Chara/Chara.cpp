@@ -1,7 +1,7 @@
 #include "Chara.h"
 void C_Chara::Init()
 {
-	m_charaTex.Load("Texture/Chara/Idle.png");
+	m_charaTex.Load("Texture/Game/Chara/Idle.png");
 	m_charaPos = { 0,0 };
 	m_bCharaFlg = true;
 	m_charaAnimCnt = 1;

@@ -85,6 +85,26 @@ public:
 		DrawTex(tex, 0, 0, srcRect.width, srcRect.height, &srcRect, &Math::Color(1, 1, 1, alpha), pivot);
 	}
 
+
+	//切り取りサイズ、色をそのまま描画（その代わり引数１つだけで描画できる）
+	void DrawTex_Src(const KdTexture* tex)
+	{
+		if (tex == nullptr)return;
+		Math::Rectangle srcRect = { 0,0,(long)tex->GetInfo().Width,(long)tex->GetInfo().Height };
+		Math::Color color = { 1,1,1,1 };
+		Math::Vector2 pivot = { 0.5,0.5f };
+		DrawTex(tex, 0, 0, srcRect.width, srcRect.height, &srcRect, &color, pivot);
+	}
+
+	//色変更可能な画像描画
+	void DrawTex_Color(const KdTexture* tex, const Math::Color* color)
+	{
+		if (tex == nullptr)return;
+		Math::Rectangle srcRect = { 0,0,(long)tex->GetInfo().Width,(long)tex->GetInfo().Height };
+		Math::Vector2 pivot = { 0.5,0.5f };
+		DrawTex(tex, 0, 0, srcRect.width, srcRect.height, &srcRect, color, pivot);
+	}
+
 	//４・５月の授業用文字表示
 	void DrawString(float _x, float _y, const char _text[], const Math::Vector4& _color)
 	{

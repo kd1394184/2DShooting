@@ -27,6 +27,12 @@ public:
 	// 画像情報取得
 	const D3D11_TEXTURE2D_DESC& GetInfo() const { return m_desc; }
 
+	//画像半径取得（チーム制作時に使用するため追加した関数）
+	Math::Vector2 GetRadius()
+	{
+		return { m_desc.Width / 1.5f,m_desc.Height / 1.5f };
+	}
+
 	//====================================================
 	//
 	// 読み込み・作成

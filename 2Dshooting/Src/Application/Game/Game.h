@@ -1,9 +1,11 @@
 #pragma once
+#include"../Scene.h"
 
+//‘O•ûéŒ¾
 class C_Chara;
 class C_BackGround;
 
-class C_Game
+class C_Game:public C_SceneStateBase
 {
 public:
 	C_Game() {};

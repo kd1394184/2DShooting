@@ -1,6 +1,14 @@
 #pragma once
 
 
+//画面端定数
+static const int SCREEN_LEFT = -640;
+static const int SCREEN_RIGHT = 640;
+static const int SCREEN_TOP = 360;
+static const int SCREEN_BOTTOM = -360;
+static const int SCREEN_WIDTH = SCREEN_RIGHT - SCREEN_LEFT;
+static const int SCREEN_HEIGHT = SCREEN_TOP - SCREEN_BOTTOM;
+
 //============================================================
 // アプリケーションクラス
 //	APP.～ でどこからでもアクセス可能

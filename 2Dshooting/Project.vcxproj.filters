@@ -52,6 +52,18 @@
     <Filter Include="Src\Application\Game\Chara">
       <UniqueIdentifier>{1f7fe71f-d58a-4f64-b233-b3b5eeccdeaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Title">
+      <UniqueIdentifier>{58669c4a-c06f-4e41-b835-b35488ee432a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Result">
+      <UniqueIdentifier>{4b1ffd36-c447-4948-9a6f-836463d177aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\System">
+      <UniqueIdentifier>{179c16ae-d2d0-4aeb-94d9-7f498aa23142}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\System\KeyManager">
+      <UniqueIdentifier>{11375b13-3b64-48b9-8eec-832cbae039bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -147,14 +159,20 @@
     <ClInclude Include="Src\Application\Scene.h">
       <Filter>Src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Chara\Chara.h">
-      <Filter>Src\Application\Game\Chara</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Game\Game.h">
       <Filter>Src\Application\Game</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\Game\BackGround\BackGround.h">
       <Filter>Src\Application\Game\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Game\Chara\Chara.h">
+      <Filter>Src\Application\Game\Chara</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Title\Title.h">
+      <Filter>Src\Application\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\System\KeyManager.h">
+      <Filter>Src\Application\System\KeyManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -221,14 +239,20 @@
     <ClCompile Include="Src\Application\Scene.cpp">
       <Filter>Src\Application</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Chara\Chara.cpp">
-      <Filter>Src\Application\Game\Chara</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Game\Game.cpp">
       <Filter>Src\Application\Game</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\Game\BackGround\BackGround.cpp">
       <Filter>Src\Application\Game\BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Game\Chara\Chara.cpp">
+      <Filter>Src\Application\Game\Chara</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Title\Title.cpp">
+      <Filter>Src\Application\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\System\KeyManager.cpp">
+      <Filter>Src\Application\System\KeyManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

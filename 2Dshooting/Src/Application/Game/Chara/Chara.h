@@ -2,9 +2,10 @@
 
 class C_Chara
 {
+
 public:
 	C_Chara() {};
-	~C_Chara() { void Release(); };
+	~C_Chara() { void Release();};
 
 	void Init();
 	void Update();
@@ -22,8 +23,6 @@ private:
 	KdTexture m_charaTex;			
 	Math::Matrix m_charaMat;				
 	Math::Vector2 m_charaPos;
-	
-
 	
 };
 

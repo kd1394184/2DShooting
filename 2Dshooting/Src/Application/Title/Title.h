@@ -53,6 +53,7 @@ private:
 	Math::Matrix m_gateEffectMat;
 	Math::Vector2 m_gateEffectPos;
 	//点滅関数
+	bool m_bGateEffectFlg;				//点滅アニメーション状態
 	float m_gateEffectAlpha;
 	float m_gateEffectDelta;
 
@@ -72,16 +73,36 @@ private:
 	Math::Matrix m_obeliskEffectMat[s_ObeliskNum];
 	Math::Vector2 m_obeliskEffectPos[s_ObeliskNum];
 
-	//メニューテキスト選択時の		
+	//メニューテキスト選択時のエフェクト
 	float m_textEffectAnimCnt;				
 	KdTexture m_textEffectTex[s_ObeliskNum];
 	Math::Matrix m_textEffectMat[s_ObeliskNum];
 	Math::Vector2 m_textEffectPos[s_ObeliskNum];
 
+	//エフェクト管理フラグ
+	bool m_bEffectFlg[s_ObeliskNum];					
+
 	//背景（黒）
 	KdTexture m_backGroundTex;
 	Math::Matrix m_backGroundMat;
 	Math::Vector2 m_backGroundPos;
+
+	//メニュー選択時の表示画像
+	//コントロール
+	KdTexture m_controlShowTex;
+	Math::Matrix m_controlShowMat;
+	Math::Vector2 m_controlShowPos;
+	bool m_bControlShowFlg;				//コントロールの表示フラグ
+	//ストーリー
+	KdTexture m_storyShowTex;
+	Math::Matrix m_storyShowMat;
+	Math::Vector2 m_storyShowPos;
+	bool m_bStoryShowFlg;				//ストーリーの表示フラグ
+	//クレジット
+	KdTexture m_creditShowTex;
+	Math::Matrix m_creditShowMat;
+	Math::Vector2 m_creditShowPos;
+	bool m_bCreditShowFlg;				//クレジットの表示フラグ
 
 	bool a;
 	

@@ -1,11 +1,11 @@
 #pragma once
 
-//enum SceneType
-//{
-//	Title,
-//	Game,
-//	Result
-//};
+enum SceneType
+{
+	Title,
+	Game,
+	Result
+};
 
 class Scene
 {
@@ -79,6 +79,7 @@ public:
 	virtual void Draw() = 0;
 };
 
+
 //シーン管理用クラス
 class C_SceneManager
 {
@@ -88,7 +89,6 @@ public:
 	{
 		delete currentState;
 		currentState = newState;
-		
 	}
 
 	void Update() 

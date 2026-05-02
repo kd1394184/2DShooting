@@ -1,7 +1,7 @@
 #include"Title.h"
 #include"../Scene.h"
-
-
+#include "../System/KeyManager.h"
+#include"../Game/Game.h"
 
 C_Title::C_Title()
 {
@@ -19,7 +19,12 @@ C_Title::C_Title()
 	m_creditTex.Load("Texture/Title/creditText.png");
 	m_exitTex.Load("Texture/Title/exitText.png");
 
-	for (int i = 0; i < s_ObeliskNum; i++)
+	//メニュー選択時
+	m_controlShowTex.Load("Texture/Title/Menu/control.png");
+	m_storyShowTex.Load("Texture/Title/Menu/story.png");
+	m_creditShowTex.Load("Texture/Title/Menu/credit.png");
+	
+	for (int i = 0; i < s_ObeliskNum; i++)	
 	{
 		m_obeliskTex[i].Load("Texture/Title/obelisk.png");
 		//選択のオベリスクのエフェクト
@@ -56,11 +61,28 @@ C_Title::C_Title()
 	m_creditPos = { m_obeliskPos[2].x,-220 };
 	m_exitPos = { m_obeliskPos[3].x,-220 };
 
+	//メニュー選択時の表示画像の位置
+	m_controlShowPos = { 0,-320 };
+	m_storyShowPos = { 0,-320 };
+	m_creditShowPos = { 0,-300 };
+
+	//フラグ
+	m_bCanPressKey = false;			//クリック判定フラグ
+	m_bControlShowFlg = false;		//コントロールの表示フラグ
+	m_bStoryShowFlg = false;		//ストーリーの表示フラグ
+	m_bCreditShowFlg = false;		//クレジットの表示フラグ
 
 	//点滅関数
 	m_gateEffectAlpha = 0.6f;
 	m_gateEffectDelta = -0.01f;
 	
+	//エフェクト管理フラグ
+	for (int i = 0; i < s_ObeliskNum; i++)
+	{
+		m_bEffectFlg[i] = false;
+	}
+	m_bGateEffectFlg = false;
+
 	//オベリスクのアニメーション
 	m_obeliskAnimCnt = 1;
 	m_bObeliskAnimFlg = true;
@@ -69,6 +91,9 @@ C_Title::C_Title()
 	m_bObeliskEffectAnimFlg = true;
 	//テキストのエフェクトアニメーション
 	m_textEffectAnimCnt = 1;
+
+
+	
 }
 
 void C_Title::Update()
@@ -87,15 +112,21 @@ void C_Title::Update()
 	m_creditMat = Math::Matrix::CreateTranslation(m_creditPos.x, m_creditPos.y, 0);
 	m_exitMat = Math::Matrix::CreateTranslation(m_exitPos.x, m_exitPos.y, 0);
 
+	//メニュー選択時の表示画像の行列
+	m_controlShowMat = Math::Matrix::CreateTranslation(m_controlShowPos.x, m_controlShowPos.y, 0);
+	m_storyShowMat = Math::Matrix::CreateTranslation(m_storyShowPos.x, m_storyShowPos.y, 0);
+	m_creditShowMat = Math::Matrix::CreateTranslation(m_creditShowPos.x, m_creditShowPos.y, 0);
+
+	for (int i = 0; i < s_ObeliskNum; i++)
+	{
+		m_obeliskMat[i] = Math::Matrix::CreateTranslation(m_obeliskPos[i].x, m_obeliskPos[i].y, 0);
+	}
+
 	//オベリスクのアニメーション
 	m_obeliskAnimCnt += 0.2f;
 	if (m_obeliskAnimCnt > 13)
 	{
 		m_obeliskAnimCnt = 1.0f;
-		for (int i = 0; i < s_ObeliskNum; i++)
-		{
-			m_obeliskMat[i] = Math::Matrix::CreateTranslation(m_obeliskPos[i].x, m_obeliskPos[i].y, 0);
-		}
 	}
 	//オベリスクのエフェクトアニメーション
 	m_obeliskEffectAnimCnt += 0.7f;
@@ -109,7 +140,8 @@ void C_Title::Update()
 		}
 	}
 
-	m_textEffectAnimCnt += 0.01f;
+	//テキストのエフェクトアニメーション
+	m_textEffectAnimCnt += 0.5f;
 	if (m_textEffectAnimCnt > 16)
 	{
 		m_textEffectAnimCnt = 1.0f;
@@ -119,11 +151,8 @@ void C_Title::Update()
 		}
 	}
 
-
-	//マウスと当たっているか
-	Math::Vector2 radius = m_obeliskTex[0].GetRadius();
-
-	//メニュー選択の処理
+	//メニューの選択
+	//============================================================================
 	if (GetAsyncKeyState(VK_LBUTTON)&0x8000)
 	{
 		if (m_bCanPressKey)
@@ -131,14 +160,132 @@ void C_Title::Update()
 			//クリックされていない
 			m_bCanPressKey = false;
 
-			if (SCENE.JudgeHitMouse(m_obeliskPos[0],radius))
+			if (SCENE.JudgeHitMouse(m_controlsPos,m_controlsTex.GetRadius()))
 			{
-				a = true;
+				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+				{
+					if (!KEY_MANAGER.IsPressing(VK_LBUTTON))
+					{
+						KEY_MANAGER.Press(VK_LBUTTON);
+
+						m_bControlShowFlg = true;		//コントロールの表示フラグを立てる
+
+					}
+				}
 			}
 
+			else if (SCENE.JudgeHitMouse(m_storyPos, m_storyTex.GetRadius()))
+			{
+				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+				{
+					if (!KEY_MANAGER.IsPressing(VK_LBUTTON))
+					{
+						KEY_MANAGER.Press(VK_LBUTTON);
 
+						m_bStoryShowFlg = true;			//ストーリーの表示フラグを立てる
+					}
+				}
+			}
+
+			else if (SCENE.JudgeHitMouse(m_creditPos, m_creditTex.GetRadius()))
+			{
+				
+				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+				{
+					if (!KEY_MANAGER.IsPressing(VK_LBUTTON))
+					{
+						KEY_MANAGER.Press(VK_LBUTTON);
+
+						m_bCreditShowFlg = true;			//クレジットの表示フラグを立てる
+					}
+				}
+				
+			}
+
+			else if (SCENE.JudgeHitMouse(m_obeliskPos[3], m_obeliskTex[3].GetRadius()))
+			{
+				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+				{
+					if (!KEY_MANAGER.IsPressing(VK_LBUTTON))
+					{
+						KEY_MANAGER.Press(VK_LBUTTON);
+
+						//↓↓退出↓↓
+
+
+					}
+				}
+			}
+
+			else if (SCENE.JudgeHitMouse(m_playPos, m_playTex.GetRadius()))
+			{
+				
+
+				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+				{
+					if (!KEY_MANAGER.IsPressing(VK_LBUTTON))
+					{
+						KEY_MANAGER.Press(VK_LBUTTON);
+
+						//スタートの処理
+						SCENE_MANAGER.ChangeState(new C_Title());
+						return;
+
+					}
+				}
+			}
+			
+		}
+	}
+
+	else
+	{
+		m_bCanPressKey = true;
+	}
+
+	//============================================================================
+
+	//オベリスクと当たっているか
+
+		//最左オベリスク
+		if (SCENE.JudgeHitMouse(m_controlsPos, m_controlsTex.GetRadius()))
+		{
+			m_bEffectFlg[0] = true;
+		}
+		//近左オベリスク
+		else if (SCENE.JudgeHitMouse(m_storyPos, m_storyTex.GetRadius()))
+		{
+			m_bEffectFlg[1] = true;
+		}
+		//近右オベリスク
+		else if (SCENE.JudgeHitMouse(m_creditPos, m_creditTex.GetRadius()))
+		{
+			m_bEffectFlg[2] = true;
+		}
+		//最右オベリスク
+		else if (SCENE.JudgeHitMouse(m_exitPos, m_exitTex.GetRadius()))
+		{
+			m_bEffectFlg[3] = true;
+		}
+	
+		else
+		{
+			for (int i = 0; i < s_ObeliskNum; i++)
+			{
+				m_bEffectFlg[i] = false;
+			}
 		}
 
+
+	//ゲートと当たっているか
+	if (SCENE.JudgeHitMouse(m_playPos, m_playTex.GetRadius()))
+	{
+		m_bGateEffectFlg = true;
+	}
+
+	else
+	{
+		m_bGateEffectFlg = false;
 	}
 
 	//点滅処理
@@ -164,12 +311,15 @@ void C_Title::Draw()
 
 	for (int i = 0; i < s_ObeliskNum; i++)
 	{
-		SHADER.m_spriteShader.SetMatrix(m_textEffectMat[i]);
-		SHADER.m_spriteShader.DrawTex(&m_textEffectTex[i], Math::Rectangle{ (int)m_textEffectAnimCnt * 136,0,136,80 }, 0.7f);
+		if (m_bEffectFlg[i])
+		{
+			SHADER.m_spriteShader.SetMatrix(m_textEffectMat[i]);
+			SHADER.m_spriteShader.DrawTex(&m_textEffectTex[i], Math::Rectangle{ (int)m_textEffectAnimCnt * 100,0,100,80 }, 0.7f);
+		}
 	}
 
 	//テキスト類
-	//スタート
+	////スタート
 	SHADER.m_spriteShader.SetMatrix(m_playMat);
 	SHADER.m_spriteShader.DrawTex_Src(&m_playTex);
 	//操作方法
@@ -186,26 +336,70 @@ void C_Title::Draw()
 	SHADER.m_spriteShader.DrawTex_Src(&m_exitTex);
 
 	//エフェクト
-	SHADER.m_spriteShader.SetMatrix(m_gateEffectMat);
-	Math::Color  color{ 1,1,1,m_gateEffectAlpha };
-	SHADER.m_spriteShader.DrawTex_Color(&m_gateEffectTex, &color);
-	SHADER.m_spriteShader.SetMatrix(m_gateMat);
-	SHADER.m_spriteShader.DrawTex_Src(&m_gateTex);
+	if (!m_bGateEffectFlg)
+	{
+		SHADER.m_spriteShader.SetMatrix(m_gateMat);
+		SHADER.m_spriteShader.DrawTex_Src(&m_gateTex);
+	}
+
+	else
+	{
+		SHADER.m_spriteShader.SetMatrix(m_gateEffectMat);
+		Math::Color  color{ 1,1,1,m_gateEffectAlpha };
+		SHADER.m_spriteShader.DrawTex_Color(&m_gateEffectTex, &color);
+		SHADER.m_spriteShader.SetMatrix(m_gateMat);
+		SHADER.m_spriteShader.DrawTex_Src(&m_gateTex);
+	}
 
 
-	//オベリスクのエフェクトの描画処理
+	if (m_bEffectFlg[0])
+	{
+		SHADER.m_spriteShader.SetMatrix(m_obeliskEffectMat[0]);
+		SHADER.m_spriteShader.DrawTex(&m_obeliskEffectTex[0], Math::Rectangle{ (int)m_obeliskEffectAnimCnt * 170,0,170,301 }, 1.0f);
+	}
+
+	else if (m_bEffectFlg[1])
+	{
+		SHADER.m_spriteShader.SetMatrix(m_obeliskEffectMat[1]);
+		SHADER.m_spriteShader.DrawTex(&m_obeliskEffectTex[1], Math::Rectangle{ (int)m_obeliskEffectAnimCnt * 170,0,170,301 }, 1.0f);
+	}
+	
+	else if (m_bEffectFlg[2])
+	{
+		SHADER.m_spriteShader.SetMatrix(m_obeliskEffectMat[2]);
+		SHADER.m_spriteShader.DrawTex(&m_obeliskEffectTex[2], Math::Rectangle{ (int)m_obeliskEffectAnimCnt * 170,0,170,301 }, 1.0f);
+	}
+
+	else if (m_bEffectFlg[3])
+	{
+		SHADER.m_spriteShader.SetMatrix(m_obeliskEffectMat[3]);
+		SHADER.m_spriteShader.DrawTex(&m_obeliskEffectTex[3], Math::Rectangle{ (int)m_obeliskEffectAnimCnt * 170,0,170,301 }, 1.0f);
+	}
+
+	//オベリスクの描画処理
 	for (int i = 0; i < s_ObeliskNum; i++)
 	{
-		SHADER.m_spriteShader.SetMatrix(m_obeliskEffectMat[i]);
-		SHADER.m_spriteShader.DrawTex(&m_obeliskEffectTex[i], Math::Rectangle{ (int)m_obeliskEffectAnimCnt * 170,0,170,301 }, 1.0f);
-	
 		//オベリスクの描画処理
 		SHADER.m_spriteShader.SetMatrix(m_obeliskMat[i]);
 		SHADER.m_spriteShader.DrawTex(&m_obeliskTex[i], Math::Rectangle{ (int)m_obeliskAnimCnt * 200,0,200,400 }, 1.0f);
 	}
-	
 
-	
+	//メニュー選択時の表示画像の描画処理
+	if (m_bControlShowFlg)
+	{
+		SHADER.m_spriteShader.SetMatrix(m_controlShowMat);
+		SHADER.m_spriteShader.DrawTex_Src(&m_controlShowTex);
+	}
+	else if (m_bStoryShowFlg)
+	{
+		SHADER.m_spriteShader.SetMatrix(m_storyShowMat);
+		SHADER.m_spriteShader.DrawTex_Src(&m_storyShowTex);
+	}
+	else if (m_bCreditShowFlg)
+	{
+		SHADER.m_spriteShader.SetMatrix(m_creditShowMat);
+		SHADER.m_spriteShader.DrawTex_Src(&m_creditShowTex);
+	}
 
 }
 
@@ -219,9 +413,11 @@ void C_Title::Release()
 	m_gateEffectTex.Release();
 	m_backGroundTex.Release();
 	
+	
 	for (int i = 0; i < s_ObeliskNum; i++)
 	{
 		m_obeliskTex[i].Release();
 		m_obeliskEffectTex[i].Release();
+		m_textEffectTex[i].Release();
 	}
 }

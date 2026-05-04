@@ -174,7 +174,7 @@ void C_Title::Update()
 				}
 			}
 
-			else if (SCENE.JudgeHitMouse(m_storyPos, m_storyTex.GetRadius()))
+			if (SCENE.JudgeHitMouse(m_storyPos, m_storyTex.GetRadius()))
 			{
 				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 				{
@@ -187,7 +187,7 @@ void C_Title::Update()
 				}
 			}
 
-			else if (SCENE.JudgeHitMouse(m_creditPos, m_creditTex.GetRadius()))
+			if (SCENE.JudgeHitMouse(m_creditPos, m_creditTex.GetRadius()))
 			{
 				
 				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
@@ -202,7 +202,7 @@ void C_Title::Update()
 				
 			}
 
-			else if (SCENE.JudgeHitMouse(m_obeliskPos[3], m_obeliskTex[3].GetRadius()))
+			if (SCENE.JudgeHitMouse(m_obeliskPos[3], m_obeliskTex[3].GetRadius()))
 			{
 				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 				{
@@ -217,10 +217,9 @@ void C_Title::Update()
 				}
 			}
 
-			else if (SCENE.JudgeHitMouse(m_playPos, m_playTex.GetRadius()))
+			if (SCENE.JudgeHitMouse(m_playPos, m_playTex.GetRadius()))
 			{
 				
-
 				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 				{
 					if (!KEY_MANAGER.IsPressing(VK_LBUTTON))
@@ -228,7 +227,7 @@ void C_Title::Update()
 						KEY_MANAGER.Press(VK_LBUTTON);
 
 						//スタートの処理
-						SCENE_MANAGER.ChangeState(new C_Title());
+						SCENE_MANAGER.ChangeState(new C_Game());
 						return;
 
 					}

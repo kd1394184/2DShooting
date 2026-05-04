@@ -43,7 +43,6 @@ public:
 	//マウス座標と当たっているかを判定
 	bool JudgeHitMouse(Math::Vector2 pos, Math::Vector2 radius);
 
-
 	// GUI処理
 	void ImGuiUpdate();
 
@@ -87,18 +86,35 @@ public:
 
 	void ChangeState(C_SceneStateBase* newState)
 	{
-		delete currentState;
-		currentState = newState;
+		pendingState = newState;
 	}
 
-	void Update() 
-	{
-		currentState->Update();
+	void Update() {
+		// まず現在の状態を更新（この途中で ChangeState が呼ばれても safe）
+		if (currentState) currentState->Update();
+
+		// 更新後に遷移要求があれば安全に切り替え -> 新しい状態の初期化として Update を一度呼ぶ
+		if (pendingState)
+		{
+			delete currentState;
+			currentState = pendingState;
+			pendingState = nullptr;
+			if (currentState)
+			{
+				currentState->Update(); // 初期化目的で一回呼ぶ（既存の実装意図を再現）
+			}
+		}
 	}
 
 	void Draw()
 	{
-		currentState->Draw();
+		if (currentState)currentState->Draw();
+	}
+
+	void Release()
+	{
+		if (currentState)delete currentState;
+		if (pendingState)delete pendingState;
 	}
 
 	

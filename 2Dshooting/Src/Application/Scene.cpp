@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include"Title/Title.h"
 #include"Game/Game.h"
+#include"System/KeyManager.h"
 
 void Scene::Draw2D()
 {
@@ -27,6 +28,9 @@ void Scene::Update()
 	m_mousePos = ConvertMousePos();
 
 	SCENE_MANAGER.Update();
+
+	//キー管理クラスの更新
+	KEY_MANAGER.Update();
 }
 
 void Scene::Init()
@@ -49,6 +53,8 @@ void Scene::Release()
 {
 	//マウス画像の解放
 	m_mouseTex.Release();
+
+	SCENE_MANAGER.Release();
 }
 
 //マウス座標を取得
